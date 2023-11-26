@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  postgres:
+    env_file:
+      - .env
+    image: postgres:15-alpine
+    container_name: postgres
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    command: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./datasources.yaml
+        target: /etc/grafana/provisioning/datasources/datasources.yaml
+      - type: bind
+        source: ./dashboard.yaml
+        target: /etc/grafana/provisioning/dashboards/main.yaml
+      - ./dashboards:/var/lib/grafana/dashboards
+    ports:
+      - '3030:3000'
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./prometheus.yaml
+        target: /etc/prometheus/prometheus.yml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - '9090:9090'
