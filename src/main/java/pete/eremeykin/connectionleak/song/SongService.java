@@ -17,14 +17,22 @@ class SongService {
     private final SongRepository repository;
     private final SongMapper mapper;
 
-    List<SongDto> getAllStream() {
+
+    public List<SongDto> getAllOk() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SongDto> getAllStream() {
         return repository.getAllStream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    InputStream getAllRawConnection() {
+    public InputStream getAllRawConnection() {
         return repository.getAllCopy();
     }
 

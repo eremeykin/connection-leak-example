@@ -17,6 +17,11 @@ import java.util.List;
 class ConnectionLeakExampleController {
     private final SongService service;
 
+    @GetMapping(value = "list", params = "trouble=none")
+    List<SongDto> getAllOk() {
+        return service.getAllOk();
+    }
+
     @GetMapping(value = "list", params = "trouble=stream")
     List<SongDto> getAllStream() {
         return service.getAllStream();

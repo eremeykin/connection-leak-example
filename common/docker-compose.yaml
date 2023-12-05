@@ -7,7 +7,7 @@ services:
     container_name: postgres
     ports:
       - "${POSTGRES_PORT}:5432"
-    command: postgres
+    command: postgres -c log_statement=all -c logging_collector=on -c log_parameter_max_length=-1 -c log_duration=on
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -38,4 +38,4 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - '9090:9090'
+      - '9191:9090'
